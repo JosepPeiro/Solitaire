@@ -32,6 +32,8 @@ class Carta:
             s = "Q"
         elif self.numero == 13:
             s = "K"
+        elif self.numero == 1:
+            s = "A"
         else:
             s = str(self.numero)
         
@@ -64,10 +66,11 @@ def Baraja() -> list:
 class Juego:
     
     def __init__(self):
-        self.robar:list() # 24 cartas
-        self.vistas:list() # Destapadas después de robar
+        self.robar = list() # 24 cartas
+        self.vistas = list() # Destapadas después de robar
         self.tablero = list()
-        self.colocadas:list()
+        self.colocadas = list()
+        self.destapadas = list()
         
         
     def IniciarJuego(self):
