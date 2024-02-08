@@ -64,6 +64,15 @@ def Baraja() -> list:
     return baraja
 
 class Juego:
+    """
+    Posibles movimientos:
+        De robar destapar a vistas
+        De vistas mover a tablero
+        De destapadas mover a destapadas
+        De colocadas mover a destapadas
+        De tablero destapar a destapadas
+        De destapadas subir a colocadas
+    """
     
     def __init__(self):
         self.robar = list() # 24 cartas
@@ -76,23 +85,79 @@ class Juego:
     def IniciarJuego(self):
         todas_cartas = Baraja()
         shuffle(todas_cartas)
-        for i in todas_cartas: print(i)
-        print()
         
         for pos in range(1,8):
             column = []
 
             for long_col in range(pos):
                 column.append(todas_cartas.pop())
+            
+            destapa = [column.pop()]
                 
-            for i in column:print(i)
-            print()
             self.tablero.append(column)
+            self.destapadas.append(destapa)
             
         self.robar = todas_cartas
-        print(len(self.robar))
         for i in self.robar:print(i)
+        print()
         
+        for col in range(7):
+            for j in self.tablero[col]: print(j)
+            print()
+            for k in self.destapadas[col]: print(k)
+            print()
+        
+        return
+
+    def Mover(self, c:Carta, col:int):
+        
+        dest = self.destapadas[col] #Columna destino del tablero
+
+        if c.numero == 13:
+            if not len(dest) and not len(self.tablero[col]):
+                self.destapadas[col].append(c)
+                return
+            
+        top = dest[len(dest) - 1] #Ultima carta columna
+        if top.color != c.color and top.numero == c.numero + 1:
+            self.destapadas[col].append(c)
+        
+        return
+    
+    def Subir(self, c:Carta, col:int):
+        
+        dest = self.colocadas[col] #Columna destino para colocar
+        if not len(dest):
+            if c.numero == 1:
+                dest.append(c)
+            return
+            
+        top = dest[len(dest) - 1] #Ultima carta columna
+        
+        if top.palo == c.palo and top.numero == c.numero - 1:
+            self.colocadas[col].append(c)
+        
+        return
+    
+    
+    def DestaparRobar(self):
+        
+        if len(self.robar):
+            self.vistas.append(self.pop())
+        else:
+            while len(self.vistas):
+                self.robar.append(self.pop())
+                
+        return
+    
+    def DestaparTablero(self, col:int):
+        
+        if (not len(self.destapadas[col])) and len(self.tablero[col]):
+            self.destapadas[col].append(self.tablero[col].pop())
+        
+        return        
+            
+
 J = Juego()
 J.IniciarJuego()
         
