@@ -109,7 +109,6 @@ class Juego:
         
         return
     
-    
 
     def Mover(self, c:Carta, col:int):
         
@@ -155,6 +154,7 @@ class Juego:
                 
         return
     
+    
     def DestaparTablero(self, col:int):
         
         if (not len(self.destapadas[col])) and len(self.tablero[col]):
@@ -174,7 +174,7 @@ class Juego:
     def MoverColocadasDestapadas(self, ccol:int, dcol:int):
         carta = self.colocadas[ccol][-1]
         if self.Mover(carta, dcol):
-            self.vistas.pop()
+            self.colocadas.pop()
     
         return
     
@@ -189,6 +189,16 @@ class Juego:
             
             for _ in movidas:
                 self.destapadas[ocol].pop()
+        
+        self.DestaparTablero(ocol)
+        
+        return
+    
+    
+    def SubirDestapadasTablero(self, ocol, dcol):
+        carta = self.destapadas[ocol][-1]
+        if self.Subir(carta, dcol):
+            self.destapadas.pop()
         
         return
             
