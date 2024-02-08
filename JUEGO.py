@@ -67,10 +67,10 @@ class Juego:
     """
     Posibles movimientos:
         De robar destapar a vistas
-        De vistas mover a tablero
+        De tablero destapar a destapadas
+        De vistas mover a destapadas
         De destapadas mover a destapadas
         De colocadas mover a destapadas
-        De tablero destapar a destapadas
         De destapadas subir a colocadas
     """
     
@@ -108,6 +108,8 @@ class Juego:
             print()
         
         return
+    
+    
 
     def Mover(self, c:Carta, col:int):
         
@@ -116,13 +118,15 @@ class Juego:
         if c.numero == 13:
             if not len(dest) and not len(self.tablero[col]):
                 self.destapadas[col].append(c)
-                return
+                return True
             
         top = dest[len(dest) - 1] #Ultima carta columna
         if top.color != c.color and top.numero == c.numero + 1:
             self.destapadas[col].append(c)
+            return True
         
-        return
+        return False
+    
     
     def Subir(self, c:Carta, col:int):
         
@@ -130,14 +134,15 @@ class Juego:
         if not len(dest):
             if c.numero == 1:
                 dest.append(c)
-            return
+                return True
+            return False
             
         top = dest[len(dest) - 1] #Ultima carta columna
         
         if top.palo == c.palo and top.numero == c.numero - 1:
             self.colocadas[col].append(c)
-        
-        return
+            return True
+        return False
     
     
     def DestaparRobar(self):
@@ -155,7 +160,37 @@ class Juego:
         if (not len(self.destapadas[col])) and len(self.tablero[col]):
             self.destapadas[col].append(self.tablero[col].pop())
         
-        return        
+        return
+    
+    
+    def MoverVistasDestapadas(self, col:int):
+        carta = self.vistas[-1]
+        if self.Mover(carta, col):
+            self.vistas.pop()
+            
+        return
+    
+    
+    def MoverColocadasDestapadas(self, ccol:int, dcol:int):
+        carta = self.colocadas[ccol][-1]
+        if self.Mover(carta, dcol):
+            self.vistas.pop()
+    
+        return
+    
+    
+    def MoverEntreDestapadas(self, ocol:int, pos:int, dcol:int):
+        carta = self.destapadas[ocol][pos]
+        if self.Mover(carta, dcol):
+            movidas = 1
+            while pos + movidas < len(ocol):
+                carta = self.destapadas[ocol][pos + movidas]
+                self.Mover(carta, dcol)
+            
+            for _ in movidas:
+                self.destapadas[ocol].pop()
+        
+        return
             
 
 J = Juego()
