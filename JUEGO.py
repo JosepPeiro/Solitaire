@@ -98,14 +98,9 @@ class Juego:
             self.destapadas.append(destapa)
             
         self.robar = todas_cartas
-        for i in self.robar:print(i)
-        print()
         
-        for col in range(7):
-            for j in self.tablero[col]: print(j)
-            print()
-            for k in self.destapadas[col]: print(k)
-            print()
+        for posi in range(4):
+            self.colocadas.append([])
         
         return
     
@@ -147,7 +142,7 @@ class Juego:
     def DestaparRobar(self):
         
         if len(self.robar):
-            self.vistas.append(self.pop())
+            self.vistas.append(self.robar.pop())
         else:
             while len(self.vistas):
                 self.robar.append(self.pop())
@@ -174,7 +169,7 @@ class Juego:
     def MoverColocadasDestapadas(self, ccol:int, dcol:int):
         carta = self.colocadas[ccol][-1]
         if self.Mover(carta, dcol):
-            self.colocadas.pop()
+            self.colocadas[ccol].pop()
     
         return
     
@@ -183,11 +178,11 @@ class Juego:
         carta = self.destapadas[ocol][pos]
         if self.Mover(carta, dcol):
             movidas = 1
-            while pos + movidas < len(ocol):
+            while pos + movidas < len(self.destapadas[ocol]):
                 carta = self.destapadas[ocol][pos + movidas]
                 self.Mover(carta, dcol)
             
-            for _ in movidas:
+            for _ in range(movidas):
                 self.destapadas[ocol].pop()
         
         self.DestaparTablero(ocol)
@@ -195,16 +190,48 @@ class Juego:
         return
     
     
-    def SubirDestapadasTablero(self, ocol, dcol):
+    def SubirDestapadasColocadas(self, ocol, dcol):
         carta = self.destapadas[ocol][-1]
         if self.Subir(carta, dcol):
-            self.destapadas.pop()
+            self.destapadas[ocol].pop()
         
         return
+    
+    def Mostrar(self):
+        
+        for i in self.robar:print(i)
+        print()
+        for m in self.vistas:print(m)
+        print()
+        
+        for col in range(4):
+            for l in self.colocadas[col]:print(l)
+            print()
+        print()
+        for col in range(7):
+            for j in self.tablero[col]: print(j)
+            print()
+            print(len(self.destapadas))
+            for k in self.destapadas[col]: print(k)
+            print()
             
 
 J = Juego()
 J.IniciarJuego()
-        
+J.MoverEntreDestapadas(5,0,6)
+J.Mostrar()
+print("------------------------------------")
+J.DestaparRobar()
+J.Mostrar()
+print("------------------------------------")
+J.MoverVistasDestapadas(5)
+J.Mostrar()
+print("------------------------------------")
+J.SubirDestapadasColocadas(5, 0)
+J.Mostrar()
+print("------------------------------------")
+J.MoverColocadasDestapadas(0, 5)
+J.Mostrar()
+
         
 #for i in Baraja():print(i)
