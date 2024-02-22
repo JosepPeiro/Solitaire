@@ -1,7 +1,4 @@
-from random import shuffle, seed
-
-seed(1717)
-
+from random import shuffle
 
 palos = {"r":"rombo",
          "p":"picas",
@@ -72,6 +69,7 @@ class Juego:
         De destapadas mover a destapadas
         De colocadas mover a destapadas
         De destapadas subir a colocadas
+        De vistas subir a colocadas
     """
     
     def __init__(self):
@@ -145,7 +143,7 @@ class Juego:
             self.vistas.append(self.robar.pop())
         else:
             while len(self.vistas):
-                self.robar.append(self.pop())
+                self.robar.append(self.vistas.pop())
                 
         return
     
@@ -181,7 +179,8 @@ class Juego:
             while pos + movidas < len(self.destapadas[ocol]):
                 carta = self.destapadas[ocol][pos + movidas]
                 self.Mover(carta, dcol)
-            
+                movidas += 1
+                
             for _ in range(movidas):
                 self.destapadas[ocol].pop()
         
@@ -194,8 +193,19 @@ class Juego:
         carta = self.destapadas[ocol][-1]
         if self.Subir(carta, dcol):
             self.destapadas[ocol].pop()
+            
+        self.DestaparTablero(ocol)
         
         return
+    
+    
+    def SubirVistasColocadas(self, dcol):
+        carta = self.vistas[-1]
+        if self.Subir(carta, dcol):
+            self.vistas.pop()
+            
+        return
+        
     
     def Mostrar(self):
         
@@ -209,29 +219,8 @@ class Juego:
             print()
         print()
         for col in range(7):
+            print(col)
             for j in self.tablero[col]: print(j)
             print()
-            print(len(self.destapadas))
             for k in self.destapadas[col]: print(k)
             print()
-            
-
-J = Juego()
-J.IniciarJuego()
-J.MoverEntreDestapadas(5,0,6)
-J.Mostrar()
-print("------------------------------------")
-J.DestaparRobar()
-J.Mostrar()
-print("------------------------------------")
-J.MoverVistasDestapadas(5)
-J.Mostrar()
-print("------------------------------------")
-J.SubirDestapadasColocadas(5, 0)
-J.Mostrar()
-print("------------------------------------")
-J.MoverColocadasDestapadas(0, 5)
-J.Mostrar()
-
-        
-#for i in Baraja():print(i)
